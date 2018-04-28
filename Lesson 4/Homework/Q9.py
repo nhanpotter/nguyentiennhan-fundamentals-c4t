@@ -41,5 +41,15 @@ class Food:
         self.name = name
 
 
-Lunch().order("Penis")
+Lunch().order("Pizza")
 print(Lunch().receipt())
+
+#2+2 =4-1 = 3 quick math
+
+
+
+
+
+
+
+
