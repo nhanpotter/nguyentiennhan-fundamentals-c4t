@@ -27,23 +27,12 @@ class Paddle:
     def draw(self):
         pygame.draw.rect(display_surf,WHITE,self.rect)
 
-    def move(self, pos):
-        self.rect.y = pos[1]
-        self.draw()
+    # def move(self, pos):
+    #     self.rect.y = pos[1]
+    #     self.draw()
 
 
-class Autopaddle(Paddle):
-    def __init__(self, x, w, h, speed, ball):
-        super().__init__(x, w, h)
-        self.speed = speed
-        self.ball = ball
 
-    def move(self):
-        if self.ball.dir_x == 1:
-            if self.rect.y + self.rect.h/2 < self.ball.rect.bottom:
-                self.rect.y += self.speed
-            if self.rect.y + self.rect.h/2 > self.ball.rect.bottom:
-                self.rect.y -= self.speed
 
 
 class Scoreboard:
@@ -99,13 +88,13 @@ class Ball:
         else:
             return False
 
-    def hit_paddle_user(self, paddle):
+    def hit_paddle_user1(self, paddle):
         if self.rect.left == paddle.rect.right and self.rect.bottom >= paddle.rect.top and self.rect.top <= paddle.rect.bottom:
             return True
         else:
             return False
 
-    def hit_paddle_computer(self, paddle):
+    def hit_paddle_user2(self, paddle):
         if self.rect.right == paddle.rect.left and self.rect.bottom >= paddle.rect.top and self.rect.top <= paddle.rect.bottom:
             return True
         else:
@@ -132,8 +121,8 @@ class Game:
         paddle_w = self.line_thickness
         paddle_h = 50
 
-        self.paddles['user'] = Paddle(paddle_x, paddle_w, paddle_h)
-        self.paddles['computer'] = Autopaddle(window_width - paddle_x - 10, paddle_w, paddle_h, self.speed, self.ball)
+        self.paddles['user1'] = Paddle(paddle_x, paddle_w, paddle_h)
+        self.paddles['user2'] = Paddle(window_width - paddle_x - 10, paddle_w, paddle_h)
         self.score = Scoreboard()
 
     def draw_arena(self):
@@ -144,16 +133,16 @@ class Game:
     def update(self):
         self.draw_arena()
         self.ball.draw()
-        self.paddles['user'].draw()
-        self.paddles['computer'].draw()
+        self.paddles['user1'].draw()
+        self.paddles['user2'].draw()
         self.ball.move()
-        self.paddles['computer'].move()
 
-        if self.ball.hit_paddle_user(self.paddles['user']):
+
+        if self.ball.hit_paddle_user1(self.paddles['user1']):
             self.ball.bounce('y')
             self.score.score += 1
         self.score.display(self.score.score)
-        if self.ball.hit_paddle_computer(self.paddles['computer']):
+        if self.ball.hit_paddle_user2(self.paddles['user2']):
             self.ball.bounce('y')
 
 
@@ -167,14 +156,25 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == MOUSEMOTION:
-                game.paddles['user'].move(event.pos)
+            if event.type == KEYUP:
+                None
+            if event.type == KEYDOWN:
+                if event.key == K_w:
+                    game.paddles['user1'].rect.y -= 20
+                if event.key == K_s:
+                    game.paddles['user1'].rect.y += 20
+                if event.key == K_UP:
+                    game.paddles['user2'].rect.y -= 20
+                if event.key == K_DOWN:
+                    game.paddles['user2'].rect.y += 20
+
         game.update()
         if game.ball.hit_wall():
             break
         pygame.display.update()
         fps_clock.tick(fps)
     print('Your score:', game.score.score)
+    print("Đánh kém vlu")
 
 
 if __name__ == '__main__':
