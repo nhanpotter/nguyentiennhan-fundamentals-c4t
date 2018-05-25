@@ -11,6 +11,7 @@ cascade = cv2.CascadeClassifier("D:\\Download by Nhan\\haarcascade_frontalface_a
 
 while True:
     ret, frame = cap.read()
+    cv2.rectangle(frame,(0,0),(int(frame.shape[1]/2),int(frame.shape[0]/2),(0,0,255),5))
     ret, frame1 = cap.read()
 
     # cv2.imshow("hsvImage",hsvImage)
